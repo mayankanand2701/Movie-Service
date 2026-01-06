@@ -5,6 +5,7 @@ import com.code.movie.service.MovieService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -41,8 +42,8 @@ public class MovieController {
     }
 
     @DeleteMapping("/movie/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> deleteById(@PathVariable Long id) {
-        return movieService.deleteById(id);
+    public Mono<ResponseEntity<String>> delete(@PathVariable Long id) {
+        return movieService.deleteById(id)
+                .map(ResponseEntity::ok);
     }
 }

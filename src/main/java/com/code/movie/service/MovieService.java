@@ -41,9 +41,15 @@ public class MovieService {
                 });
     }
 
-    public Mono<Void> deleteById(Long id) {
-        return movieRepository.deleteById(id)
-                .switchIfEmpty(Mono.error(
-                new ResourceNotFoundException("Movie not found with id " + id)));
+    public Mono<String> deleteById(Long id) {
+        return movieRepository.existsById(id)
+                .flatMap(exists -> {
+                    if (!exists) {
+                        return Mono.error(new ResourceNotFoundException(
+                                "Movie not found with id: " + id));
+                    }
+                    return movieRepository.deleteById(id)
+                            .thenReturn("Movie deleted successfully with id: " + id);
+                });
     }
 }
